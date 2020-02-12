@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {COLUMNS, BLOCK_SIZE, ROWS} from './../constants';
+import { Piece } from '../piece/piece.component';
 
 @Component({
   selector: 'game-board',
@@ -15,6 +16,7 @@ export class BoardComponent implements OnInit {
   lines: number;
   level: number;
   board: number[][];
+  piece: Piece;
 
   ngOnInit(): void {
     this.initBoard();
@@ -25,10 +27,14 @@ export class BoardComponent implements OnInit {
 
     this.ctx.canvas.width = COLUMNS * BLOCK_SIZE;
     this.ctx.canvas.height = ROWS * BLOCK_SIZE;
+
+    this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
   }
 
   play(){
     this.board = this.getEmptyBoard();
+    this.piece = new Piece(this.ctx);
+    this.piece.draw();
     console.table(this.board);
   }
 
