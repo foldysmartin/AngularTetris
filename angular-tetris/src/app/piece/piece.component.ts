@@ -17,7 +17,7 @@ export class Piece implements IPiece {
     this.spawn();
   }
 
-  private spawn(){
+  spawn(){
     this.colour = 'blue';
     this.shape = [[2,0,0], [2,2,2], [0,0,0]];
 
@@ -34,5 +34,11 @@ export class Piece implements IPiece {
         }
       })
     })
+  }
+
+  move(p: IPiece){
+    this.x = p.x;
+    this.y = p.y;
+    this.shape = p.shape;
   }
 }

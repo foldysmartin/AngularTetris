@@ -1,6 +1,6 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import {COLUMNS, BLOCK_SIZE, ROWS} from './../constants';
-import { Piece } from '../piece/piece.component';
+import { Component, ViewChild, ElementRef, OnInit, HostListener } from '@angular/core';
+import {COLUMNS, BLOCK_SIZE, ROWS, KEY} from './../constants';
+import { Piece, IPiece } from '../piece/piece.component';
 
 @Component({
   selector: 'game-board',
@@ -17,6 +17,27 @@ export class BoardComponent implements OnInit {
   level: number;
   board: number[][];
   piece: Piece;
+
+  moves = {
+    [KEY.LEFT]: (p: IPiece): IPiece => ({ ...p, x: p.x - 1 }),
+    [KEY.RIGHT]: (p: IPiece): IPiece => ({ ...p, x: p.x + 1 }),
+    [KEY.DOWN]: (p: IPiece): IPiece => ({ ...p, y: p.y + 1 }),
+    [KEY.SPACE]: (p: IPiece): IPiece => ({ ...p, y: p.y + 1 }),
+    [KEY.UP]: (p: IPiece): IPiece => ({ ...p, y: p.y + 1 })
+  };
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent){    
+    if(this.moves[event.keyCode]){
+      event.preventDefault();
+
+      const p = this.moves[event.keyCode](this.piece);
+      this.piece.move(p);
+      
+      this.ctx.clearRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height);
+      this.piece.draw();
+    }
+  }
 
   ngOnInit(): void {
     this.initBoard();
